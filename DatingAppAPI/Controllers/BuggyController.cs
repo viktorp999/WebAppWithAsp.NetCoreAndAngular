@@ -1,43 +1,43 @@
-﻿using DatingAppAPI.Data;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DatingAppAPI.Entities;
+using DatingAppAPI.Interfaces;
 
 namespace DatingAppAPI.Controllers
 {
     public class BuggyController : BaseApiController
     {
-        private readonly DataContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public BuggyController(DataContext context)
+        public BuggyController(IUnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         [Authorize]
         [HttpGet("auth")]
-        public ActionResult<string> GetSecret()
+        public async Task<ActionResult<string>> GetSecret()
         {
             return "secret text";
         }
 
         [HttpGet("not-found")]
-        public ActionResult<AppUser> GetNotFound()
+        public async Task<ActionResult<AppUser>> GetNotFound()
         {
-            var thing = _context.Users.Find(-1);
+            var thing = _unitOfWork.UserRepository.GetById(-1);
 
             if (thing == null)
             {
                 return NotFound();
             }
 
-            return thing;
+            return await thing;
         }
 
         [HttpGet("server-error")]
-        public ActionResult<string> GetServerError()
+        public async Task<ActionResult<string>> GetServerError()
         {
-            var thing = _context.Users.Find(-1);
+            var thing = _unitOfWork.UserRepository.GetById(-1);
 
             var thingToReturn = thing.ToString();
 
@@ -45,7 +45,7 @@ namespace DatingAppAPI.Controllers
         }
 
         [HttpGet("bad-request")]
-        public ActionResult<string> GetBadRequest()
+        public async Task<ActionResult<string>> GetBadRequest()
         {
             return BadRequest("This was not good request");
         }

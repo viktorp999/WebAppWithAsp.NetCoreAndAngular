@@ -1,5 +1,4 @@
-﻿using DatingAppAPI.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using DatingAppAPI.Entities;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,18 +10,18 @@ namespace DatingAppAPI.Controllers
 {
     public class AccountController : BaseApiController
     {
-        private readonly DataContext _context;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
 
-        public AccountController(DataContext context, ITokenService tokenService)
+        public AccountController(IUnitOfWork unitOfWork, ITokenService tokenService)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
             _tokenService = tokenService;
         }
 
         private async Task<bool> IsUserExist(string username)
         {
-            return await _context.Users.AnyAsync(x => x.UserName == username.ToLower());
+            return await _unitOfWork.UserRepository.IsUserExists(username);
         }
 
         [HttpPost("register")]
@@ -43,8 +42,8 @@ namespace DatingAppAPI.Controllers
                 PasswordSalt = hmac.Key
             };
 
-            _context.Add(user);
-            await _context.SaveChangesAsync();
+            _unitOfWork.UserRepository.Create(user);
+            await _unitOfWork.Complete();
 
             return new UserDto
             {
@@ -56,7 +55,7 @@ namespace DatingAppAPI.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == loginDto.Username);
+            var user = await _unitOfWork.UserRepository.GetUserByUserName(loginDto.Username);
 
             if (user == null)
             {

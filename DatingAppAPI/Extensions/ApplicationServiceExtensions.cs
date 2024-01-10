@@ -16,6 +16,7 @@ namespace DatingAppAPI.Extensions
 
             services.AddCors();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
