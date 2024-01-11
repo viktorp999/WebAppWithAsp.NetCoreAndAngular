@@ -16,7 +16,7 @@ namespace DatingAppAPI.Controllers
 
         [Authorize]
         [HttpGet("auth")]
-        public async Task<ActionResult<string>> GetSecret()
+        public ActionResult<string> GetSecret()
         {
             return "secret text";
         }
@@ -24,20 +24,20 @@ namespace DatingAppAPI.Controllers
         [HttpGet("not-found")]
         public async Task<ActionResult<AppUser>> GetNotFound()
         {
-            var thing = _unitOfWork.UserRepository.GetById(-1);
+            var thing = await _unitOfWork.UserRepository.GetById(-1);
 
             if (thing == null)
             {
                 return NotFound();
             }
 
-            return await thing;
+            return thing;
         }
 
         [HttpGet("server-error")]
         public async Task<ActionResult<string>> GetServerError()
         {
-            var thing = _unitOfWork.UserRepository.GetById(-1);
+            var thing = await _unitOfWork.UserRepository.GetById(-1);
 
             var thingToReturn = thing.ToString();
 
@@ -45,7 +45,7 @@ namespace DatingAppAPI.Controllers
         }
 
         [HttpGet("bad-request")]
-        public async Task<ActionResult<string>> GetBadRequest()
+        public ActionResult<string> GetBadRequest()
         {
             return BadRequest("This was not good request");
         }

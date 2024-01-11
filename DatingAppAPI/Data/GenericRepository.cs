@@ -1,4 +1,5 @@
-﻿using DatingAppAPI.Interfaces;
+﻿using AutoMapper;
+using DatingAppAPI.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingAppAPI.Data
@@ -6,11 +7,13 @@ namespace DatingAppAPI.Data
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         protected readonly DataContext context;
+        protected readonly IMapper mapper;
         private readonly DbSet<T> _dbset;
 
-        public GenericRepository(DataContext context)
+        public GenericRepository(DataContext context, IMapper mapper)
         {
             this.context = context;
+            this.mapper = mapper;
             _dbset = this.context.Set<T>();
         }
         public async Task<T> GetById(int id)
