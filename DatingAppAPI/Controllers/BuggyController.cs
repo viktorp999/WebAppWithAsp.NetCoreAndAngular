@@ -24,7 +24,11 @@ namespace DatingAppAPI.Controllers
         [HttpGet("not-found")]
         public async Task<ActionResult<AppUser>> GetNotFound()
         {
-            var thing = await _unitOfWork.UserRepository.GetById(-1);
+            string guidstring = "00000000-0000-0000-0000-000000000000";
+
+            var guid = Guid.Parse(guidstring);
+
+            var thing = await _unitOfWork.UserRepository.GetById(guid);
 
             if (thing == null)
             {
@@ -37,7 +41,11 @@ namespace DatingAppAPI.Controllers
         [HttpGet("server-error")]
         public async Task<ActionResult<string>> GetServerError()
         {
-            var thing = await _unitOfWork.UserRepository.GetById(-1);
+            string guidstring = "00000000-0000-0000-0000-000000000000";
+
+            var guid = Guid.Parse(guidstring);
+
+            var thing = await _unitOfWork.UserRepository.GetById(guid);
 
             var thingToReturn = thing.ToString();
 

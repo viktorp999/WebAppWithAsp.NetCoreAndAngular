@@ -2,7 +2,6 @@
 using DatingAppAPI.Entities;
 using System.Security.Cryptography;
 using System.Text;
-using Microsoft.EntityFrameworkCore;
 using DatingAppAPI.DTOs;
 using DatingAppAPI.Interfaces;
 
@@ -33,10 +32,14 @@ namespace DatingAppAPI.Controllers
                 return BadRequest("User Name is taken!");
             }
 
+            var guid = Guid.NewGuid();
+
+
             using var hmac = new HMACSHA512();
 
             var user = new AppUser
             {
+                Id = guid,
                 UserName = registerDto.Username.ToLower(),
                 PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
                 PasswordSalt = hmac.Key

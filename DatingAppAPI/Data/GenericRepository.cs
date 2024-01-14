@@ -16,7 +16,7 @@ namespace DatingAppAPI.Data
             this.mapper = mapper;
             _dbset = this.context.Set<T>();
         }
-        public async Task<T> GetById(int id)
+        public async Task<T> GetById(Guid id)
         {
             return await _dbset.FindAsync(id);
         }

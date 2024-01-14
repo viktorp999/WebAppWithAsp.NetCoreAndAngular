@@ -5,7 +5,7 @@ namespace DatingAppAPI.Interfaces
     {
         void Update(T entity);
         Task<IEnumerable<T>> GetAll();
-        Task<T> GetById(int id);
+        Task<T> GetById(Guid id);
         void Create(T entity);
     }
 }

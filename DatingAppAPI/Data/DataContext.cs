@@ -1,4 +1,5 @@
 ﻿using DatingAppAPI.Entities;
+using DatingAppAPI.Entities.Config;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingAppAPI.Data
@@ -12,5 +13,11 @@ namespace DatingAppAPI.Data
 
         public DbSet<AppUser> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new AppUserConfig());
+            modelBuilder.ApplyConfiguration(new PhotoConfig());
+        }
     }
 }
