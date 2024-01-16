@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from '../app.component';
 import { NavComponent } from '../nav/nav.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccountService } from '../services/account.service';
 import { BrowserModule } from '@angular/platform-browser';
@@ -22,6 +22,7 @@ import { MemberCardComponent } from '../members/member-card/member-card.componen
 import { JwtInterceptor } from '../interceptors/jwt.interceptor';
 import { MemberEditComponent } from '../members/member-edit/member-edit.component';
 import { LoadingInterceptor } from '../interceptors/loading.interceptor';
+import { TextInputComponent } from '../forms/text-input/text-input.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { LoadingInterceptor } from '../interceptors/loading.interceptor';
     ServerErrorComponent,
     MemberCardComponent,
     MemberEditComponent,
+    TextInputComponent,
   ],
   imports: [
     HttpClientModule,
@@ -46,6 +48,7 @@ import { LoadingInterceptor } from '../interceptors/loading.interceptor';
     BrowserModule,
     AppRoutingModule,
     SharedModule,
+    ReactiveFormsModule,
   ],
 
   providers: [
