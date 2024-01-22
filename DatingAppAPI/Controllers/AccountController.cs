@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using DatingAppAPI.DTOs;
 using DatingAppAPI.Interfaces;
+using AutoMapper;
 
 namespace DatingAppAPI.Controllers
 {
@@ -11,11 +12,13 @@ namespace DatingAppAPI.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AccountController(IUnitOfWork unitOfWork, ITokenService tokenService)
+        public AccountController(IUnitOfWork unitOfWork, ITokenService tokenService, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         private async Task<bool> IsUserExist(string username)
@@ -32,18 +35,18 @@ namespace DatingAppAPI.Controllers
                 return BadRequest("User Name is taken!");
             }
 
-            var guid = Guid.NewGuid();
+            var user = _mapper.Map<AppUser>(registerDto);
 
+            var guid = Guid.NewGuid();
 
             using var hmac = new HMACSHA512();
 
-            var user = new AppUser
-            {
-                Id = guid,
-                UserName = registerDto.Username.ToLower(),
-                PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-                PasswordSalt = hmac.Key
-            };
+
+            user.Id = guid;
+            user.UserName = registerDto.Username.ToLower();
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+            user.PasswordSalt = hmac.Key;
+          
 
             _unitOfWork.UserRepository.Create(user);
             await _unitOfWork.Complete();
@@ -51,7 +54,8 @@ namespace DatingAppAPI.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
             };
         }
 
@@ -80,7 +84,8 @@ namespace DatingAppAPI.Controllers
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user)
+                Token = _tokenService.CreateToken(user),
+                KnownAs = user.KnownAs
             };
         }
     }
