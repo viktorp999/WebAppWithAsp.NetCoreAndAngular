@@ -1,5 +1,6 @@
 ﻿using DatingAppAPI.DTOs;
 using DatingAppAPI.Entities;
+using DatingAppAPI.Helpers;
 
 namespace DatingAppAPI.Interfaces
 {
@@ -7,7 +8,7 @@ namespace DatingAppAPI.Interfaces
     {
         Task<AppUser> GetUserByUserName(string username);
         Task<bool> IsUserExists(string username);
-        Task<IEnumerable<MemberDto>> GetMemebers();
+        Task<PagedList<MemberDto>> GetMemebers(UserParams userParams);
         Task<MemberDto> GetMemberByUserName(string username);
     }
 }
