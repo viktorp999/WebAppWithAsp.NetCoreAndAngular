@@ -36,7 +36,7 @@
       dropdown
     >
       <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle
-        >Welcome {{ user.username | titlecase }}</a
+        >Welcome {{ user.knownAs }}</a
       >
       <div class="dropdown-menu mt-3" *dropdownMenu>
         <a class="dropdown-item" routerLink="/member/edit">Edit Profile</a>

@@ -20,10 +20,19 @@ namespace DatingAppAPI.Controllers
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        [AllowAnonymous]
+
         [HttpGet]
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
         {
+            var currentUser = await _unitOfWork.UserRepository.GetUserByUserName(User.GetUsername());
+
+            userParams.CurrentUsername = currentUser.UserName;
+
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+            }
+
             var users = await _unitOfWork.UserRepository.GetMemebers(userParams);
 
             Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages));
@@ -42,8 +51,7 @@ namespace DatingAppAPI.Controllers
         [HttpPut]
         public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
         {
-            var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _unitOfWork.UserRepository.GetUserByUserName(username);
+            var user = await _unitOfWork.UserRepository.GetUserByUserName(User.GetUsername());
 
             if (user == null)
             {
