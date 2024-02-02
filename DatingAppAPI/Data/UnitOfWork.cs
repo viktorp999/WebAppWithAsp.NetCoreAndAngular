@@ -8,12 +8,14 @@ namespace DatingAppAPI.Data
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         public IUserRepository UserRepository { get; private set; }
+        public ILikeRepository LikeRepository { get; private set; }
 
         public UnitOfWork(DataContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
             UserRepository = new UserRepository(_context, _mapper);
+            LikeRepository = new LikeRepository(_context, _mapper);
         }
 
         public  async Task<bool> Complete()
