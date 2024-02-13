@@ -2,6 +2,7 @@
 using DatingAppAPI.DTOs;
 using DatingAppAPI.Entities;
 using DatingAppAPI.Extensions;
+using DatingAppAPI.Helpers;
 using DatingAppAPI.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,24 +20,24 @@ namespace DatingAppAPI.Data
             return await context.Likes.FindAsync(sourceUserId, targetUserId);
         }
 
-        public async Task<IEnumerable<LikeDto>> GetUserLikes(string predicate, Guid userId)
+        public async Task<PagedList<LikeDto>> GetUserLikes(LikesParams likesParams)
         {
             var users = context.Users.OrderBy(u => u.UserName).AsQueryable();
             var likes = context.Likes.AsQueryable();
 
-            if (predicate == "liked")
+            if (likesParams.Predicate == "liked")
             {
-                likes = likes.Where(like => like.SourceUserId == userId);
+                likes = likes.Where(like => like.SourceUserId == likesParams.UserId);
                 users = likes.Select(like => like.TargetUser);
             }
 
-            if (predicate == "likedBy")
+            if (likesParams.Predicate == "likedBy")
             {
-                likes = likes.Where(like => like.TargetUserId == userId);
+                likes = likes.Where(like => like.TargetUserId == likesParams.UserId);
                 users = likes.Select(like => like.SourceUser);
             }
 
-            return await users.Select(user => new LikeDto
+            var likedUsers = users.Select(user => new LikeDto
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -44,7 +45,9 @@ namespace DatingAppAPI.Data
                 Age = user.DateOfBirth.CalculateAge(),
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain).Url,
                 City = user.City
-            }).ToListAsync();
+            });
+
+            return await PagedList<LikeDto>.Create(likedUsers, likesParams.PageNumber, likesParams.PageSize);
         }
 
         public async Task<AppUser> GetUserWithLikes(Guid userId)
