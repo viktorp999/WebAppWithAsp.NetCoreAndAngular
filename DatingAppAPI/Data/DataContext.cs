@@ -14,12 +14,14 @@ namespace DatingAppAPI.Data
         public DbSet<AppUser> Users { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<UserLike> Likes { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new AppUserConfig());
             modelBuilder.ApplyConfiguration(new PhotoConfig());
             modelBuilder.ApplyConfiguration(new UserLikeConfig());
+            modelBuilder.ApplyConfiguration(new MessageConfig());
         }
     }
 }
