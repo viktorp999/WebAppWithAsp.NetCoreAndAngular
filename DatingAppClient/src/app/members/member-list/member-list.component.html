@@ -1,5 +1,5 @@
-<div class="text-center mt-3">
-  <h2>Your matches - {{ pagination?.totalItems }} found</h2>
+<div class="text-center mb-3">
+  <h4>Your matches - {{ pagination?.totalItems }} found</h4>
 </div>
 
 <div class="container mt-3" *ngIf="userParams">
@@ -51,10 +51,12 @@
       </label>
     </div>
 
-    <button class="btn btn-primary ms-1" type="submit">Apply Filters</button>
-    <button class="btn btn-info ms-1" type="submit" (click)="resetFilters()">
-      Reset Filters
-    </button>
+    <div class="d-flex align-items-start">
+      <button class="btn btn-primary me-2" type="submit">Apply Filters</button>
+      <button class="btn btn-info" type="submit" (click)="resetFilters()">
+        Reset Filters
+      </button>
+    </div>
 
     <div class="col">
       <div class="btn-group float-end">
