@@ -10,7 +10,7 @@ import { Pagination } from '../models/pagination';
 })
 export class ListsComponent implements OnInit {
   members: Member[] | undefined;
-  predicate = 'liked';
+  predicate = 'likedBy';
   pageNumber = 1;
   pageSize = 5;
   pagination: Pagination | undefined;
