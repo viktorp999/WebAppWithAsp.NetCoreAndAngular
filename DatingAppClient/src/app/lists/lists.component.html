@@ -27,14 +27,17 @@
     </div>
   </div>
 
-  <div class="row mt-3">
+  <div class="row mt-3" *ngIf="members && members.length > 0">
     <div class="col-2" *ngFor="let member of members">
       <app-member-card [member]="member"></app-member-card>
     </div>
   </div>
 </div>
 
-<div class="d-flex justify-content-center" *ngIf="pagination">
+<div
+  class="d-flex justify-content-center"
+  *ngIf="pagination && members && members.length > 0"
+>
   <pagination
     [boundaryLinks]="true"
     [totalItems]="pagination.totalItems"
@@ -48,4 +51,18 @@
     lastText="&raquo;"
   >
   </pagination>
+</div>
+
+<div
+  class="text-center mt-5"
+  *ngIf="predicate === 'liked' && (!members || members.length === 0)"
+>
+  <h4>No liked members</h4>
+</div>
+
+<div
+  class="text-center mt-5"
+  *ngIf="predicate === 'likedBy' && (!members || members.length === 0)"
+>
+  <h4>No likes</h4>
 </div>
