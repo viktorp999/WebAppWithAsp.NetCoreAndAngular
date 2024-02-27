@@ -7,6 +7,7 @@ import {
   NgxGalleryImage,
   NgxGalleryOptions,
 } from '@kolkov/ngx-gallery';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-member-detail',
@@ -20,7 +21,8 @@ export class MemberDetailComponent implements OnInit {
 
   constructor(
     private memberService: MembersService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +64,14 @@ export class MemberDetailComponent implements OnInit {
       next: (member) => {
         this.member = member;
         this.galleryImages = this.getImages();
+      },
+    });
+  }
+
+  addLike(member: Member) {
+    this.memberService.addLike(member.userName).subscribe({
+      next: () => {
+        this.toastr.success('You have liked ' + member.knownAs);
       },
     });
   }
