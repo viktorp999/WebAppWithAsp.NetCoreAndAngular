@@ -42,7 +42,7 @@ namespace DatingAppAPI.Controllers
             {
                 Sender = sender,
                 Recipient = recipient,
-                SenderUsermame = sender.UserName,
+                SenderUsername = sender.UserName,
                 RecipientUsername = recipient.UserName,
                 Content = createMessageDto.Content
             };
