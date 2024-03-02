@@ -47,7 +47,7 @@ namespace DatingAppAPI.Controllers
                 Content = createMessageDto.Content
             };
 
-            _unitOfWork.MessageRepository.AddMessage(message);
+            _unitOfWork.MessageRepository.Create(message);
 
             if (await _unitOfWork.Complete())
             {

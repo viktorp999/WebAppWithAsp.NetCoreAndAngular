@@ -15,21 +15,6 @@ namespace DatingAppAPI.Data
 
         }
 
-        public void AddMessage(Message message)
-        {
-            context.Messages.Add(message);
-        }
-
-        public void DeleteMessage(Message message)
-        {
-            context.Messages.Remove(message);
-        }
-
-        public async Task<Message> GetMessage(Guid id)
-        {
-            return await context.Messages.FindAsync(id);
-        }
-
         public async Task<PagedList<MessageDto>> GetMessagesForUser(MessagesParams messagesParams)
         {
             var query = context.Messages.OrderByDescending(x => x.MessageSent).AsQueryable();
