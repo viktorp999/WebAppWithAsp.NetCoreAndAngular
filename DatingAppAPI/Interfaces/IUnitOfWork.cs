@@ -5,6 +5,7 @@ namespace DatingAppAPI.Interfaces
     {
         IUserRepository UserRepository { get; }
         ILikeRepository LikeRepository { get; }
+        IMessageRepository MessageRepository { get; }
         Task<bool> Complete();
     }
 }

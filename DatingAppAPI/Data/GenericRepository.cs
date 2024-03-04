@@ -35,5 +35,10 @@ namespace DatingAppAPI.Data
         {
             _dbset.Add(entity);
         }
+
+        public void Delete(T entity)
+        {
+            _dbset.Remove(entity);
+        }
     }
 }

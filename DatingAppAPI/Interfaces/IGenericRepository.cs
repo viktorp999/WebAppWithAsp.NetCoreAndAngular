@@ -7,5 +7,6 @@ namespace DatingAppAPI.Interfaces
         Task<IEnumerable<T>> GetAll();
         Task<T> GetById(Guid id);
         void Create(T entity);
+        void Delete(T entity);
     }
 }
