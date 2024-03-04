@@ -21,9 +21,9 @@ namespace DatingAppAPI.Data
 
             query = messagesParams.Container switch
             {
-                "Inbox" => query.Where(u => u.RecipientUsername == messagesParams.Username),
-                "Outbox" => query.Where(u => u.SenderUsername == messagesParams.Username),
-                _ => query.Where(u => u.RecipientUsername == messagesParams.Username && u.DateRead == null)
+                "Inbox" => query.Where(u => u.RecipientUsername == messagesParams.Username && u.RecipientDeleted == false),
+                "Outbox" => query.Where(u => u.SenderUsername == messagesParams.Username && u.SenderDeleted == false),
+                _ => query.Where(u => u.RecipientUsername == messagesParams.Username && u.DateRead == null && u.RecipientDeleted == false)
             };
 
             var messages = query.ProjectTo<MessageDto>(mapper.ConfigurationProvider);
@@ -38,8 +38,8 @@ namespace DatingAppAPI.Data
                 .Include(u => u.Recipient).ThenInclude(p => p.Photos)
                 .Where(
 
-                   m => m.RecipientUsername == currentUserName && m.SenderUsername == recipientUserName ||
-                   m.RecipientUsername == recipientUserName && m.SenderUsername == currentUserName
+                   m => m.RecipientUsername == currentUserName && m.SenderUsername == recipientUserName && m.RecipientDeleted == false||
+                   m.RecipientUsername == recipientUserName && m.SenderUsername == currentUserName && m.SenderDeleted == false
                 ).OrderBy(m => m.MessageSent).ToListAsync();
 
             var unreadMessages = messages.Where(m => m.DateRead == null && m.RecipientUsername == currentUserName).ToList();
