@@ -17,10 +17,10 @@ import { Message } from '../../models/message';
   styleUrl: './member-detail.component.css',
 })
 export class MemberDetailComponent implements OnInit {
-  member: Member | undefined;
+  member: Member = {} as Member;
   galleryOptions: NgxGalleryOptions[] = [];
   galleryImages: NgxGalleryImage[] = [];
-  @ViewChild('memberTabs') memberTabs?: TabsetComponent;
+  @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
   activeTab?: TabDirective;
   mesages: Message[] = [];
 
@@ -31,7 +31,15 @@ export class MemberDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadMember();
+    this.route.data.subscribe({
+      next: (data) => (this.member = data['member']),
+    });
+
+    this.route.queryParams.subscribe({
+      next: (params) => {
+        params['tab'] && this.selectTab(params['tab']);
+      },
+    });
 
     this.galleryOptions = [
       {
@@ -43,6 +51,8 @@ export class MemberDetailComponent implements OnInit {
         preview: false,
       },
     ];
+
+    this.galleryImages = this.getImages();
   }
 
   getImages() {
@@ -60,24 +70,17 @@ export class MemberDetailComponent implements OnInit {
     return imgUrls;
   }
 
-  loadMember() {
-    const username = this.route.snapshot.paramMap.get('username');
-    if (!username) {
-      return;
-    }
-    this.memberService.getMemeber(username).subscribe({
-      next: (member) => {
-        this.member = member;
-        this.galleryImages = this.getImages();
-      },
-    });
-  }
-
   loadMessages() {
     if (this.member) {
       this.messageService.getMessageThread(this.member.userName).subscribe({
         next: (mesages) => (this.mesages = mesages),
       });
+    }
+  }
+
+  selectTab(heading: string) {
+    if (this.memberTabs) {
+      this.memberTabs.tabs.find((x) => x.heading === heading)!.active = true;
     }
   }
 
