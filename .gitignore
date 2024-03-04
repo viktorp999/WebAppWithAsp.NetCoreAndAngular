@@ -363,4 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 datingapp.db
+datingapp.db-shm
+datingapp.db-wal
 appsettings.json
